@@ -29,17 +29,11 @@ trait DVDRepository {
   /**
    * Lists all DVDs in the repository.
    */
-  def listDVDs(): Unit
+  def listDVDs(): List[DVD]
 
   /**
    * Displays the details of a DVD by its title.
    * @param title The title of the DVD to be displayed.
    */
-  def displayDVD(title: String): Unit
-
-  /**
-   * Searches for a DVD in the repository by its title.
-   * @param title The title of the DVD to be searched.
-   */
-  def searchDVD(title: String): Unit
+  def displayDVD(title: String): Option[DVD]
 }

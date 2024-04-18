@@ -1,2 +1,9 @@
 # Project exclude paths
 /target/
+project/target/
+out/production/
+out/test/
+/.idea/
+/.idea
+*.xml
+.bsp/sbt.json

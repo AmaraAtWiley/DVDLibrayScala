@@ -43,23 +43,17 @@ class DVDRepositoryImpl extends DVDRepository {
   /**
    * Lists all DVDs in the library.
    */
-  override def listDVDs(): Unit = {
-    dvdLibrary.foreach(println)
+  override def listDVDs(): List[DVD] = {
+    dvdLibrary
   }
 
   /**
    * Displays the details of a DVD by its title.
    * @param title The title of the DVD to be displayed.
    */
-  override def displayDVD(title: String): Unit = {
-    dvdLibrary.find(_.title == title).foreach(println)
+  override def displayDVD(title: String): Option[DVD] = {
+    dvdLibrary.find(_.title == title)
   }
 
-  /**
-   * Searches for a DVD in the library by its title.
-   * @param title The title of the DVD to be searched.
-   */
-  override def searchDVD(title: String): Unit = {
-    dvdLibrary.filter(_.title.toLowerCase.contains(title.toLowerCase)).foreach(println)
-  }
+
 }

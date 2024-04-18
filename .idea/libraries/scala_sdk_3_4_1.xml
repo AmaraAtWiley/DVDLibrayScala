@@ -17,13 +17,8 @@
         <root url="file://$USER_HOME$/.ivy2/cache/net.java.dev.jna/jna/jars/jna-5.3.1.jar" />
       </compiler-classpath>
     </properties>
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala3-library_3/jars/scala3-library_3-3.4.1.jar!/" />
-      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.13.12.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala3-library_3/srcs/scala3-library_3-3.4.1-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

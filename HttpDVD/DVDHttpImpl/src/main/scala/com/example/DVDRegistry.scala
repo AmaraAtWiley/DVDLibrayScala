@@ -23,7 +23,7 @@ object DVDRegistry {
   val url = "jdbc:mysql://localhost:3306/dvdLibrary?serverTimezone=America/Chicago&useSSL=false"
   val driver = "com.mysql.cj.jdbc.Driver"
   val username = "root"
-  val password = "Deepak15@singh"
+  val password = "---Change this---"
 
 
   // actor protocol

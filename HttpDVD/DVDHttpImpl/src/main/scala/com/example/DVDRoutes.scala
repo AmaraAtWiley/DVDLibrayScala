@@ -11,6 +11,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.util.Timeout
 
+
 //#import-json-formats
 //#user-routes-class
 class DVDRoutes(dvdRegistry: ActorRef[DVDRegistry.Command])(implicit val system: ActorSystem[_]) {
@@ -25,20 +26,20 @@ class DVDRoutes(dvdRegistry: ActorRef[DVDRegistry.Command])(implicit val system:
 
   def getDVDs(): Future[DVDs] =
     dvdRegistry.ask(GetDVDs.apply)
+
   def getDVD(title: String): Future[GetDVDResponse] =
-    dvdRegistry.ask(GetDVD(title, _))
+    dvdRegistry.ask(replyTo => GetDVD(title, replyTo))
+
   def createDVD(dvd: DVD): Future[ActionPerformed] =
     dvdRegistry.ask(CreateDVD(dvd, _))
+
   def deleteDVD(title: String): Future[ActionPerformed] =
-    dvdRegistry.ask(DeleteDVD(title, _))
+    dvdRegistry.ask(replyTo => DeleteDVD(title, replyTo))
 
   //#all-routes
-  //#users-get-post
-  //#users-get-delete
   val dvdRoutes: Route =
     pathPrefix("dvds") {
       concat(
-        //#users-get-delete
         pathEnd {
           concat(
             get {
@@ -52,28 +53,19 @@ class DVDRoutes(dvdRegistry: ActorRef[DVDRegistry.Command])(implicit val system:
               }
             })
         },
-        //#users-get-delete
-        //#users-get-post
         path(Segment) { title =>
           concat(
             get {
-              //#retrieve-user-info
-              rejectEmptyResponse {
-                onSuccess(getDVD(title)) { response =>
-                  complete(response.maybeDVD)
-                }
+              onSuccess(getDVD(title)) { response =>
+                complete(response.maybeDVD)
               }
-              //#retrieve-user-info
             },
             delete {
-              //#users-delete-logic
               onSuccess(deleteDVD(title)) { performed =>
                 complete((StatusCodes.OK, performed))
               }
-              //#users-delete-logic
             })
         })
-      //#users-get-delete
     }
   //#all-routes
 }

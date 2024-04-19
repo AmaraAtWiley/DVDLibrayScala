@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Library</title>
+    <!-- Add any CSS stylesheets here -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>DVD Library</h1>
+
+<form id="add-dvd-form">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br>
+
+    <label for="releaseYear">Release Year:</label>
+    <input type="number" id="releaseYear" name="releaseYear" min="1000" max="9999" required><br>
+
+    <label for="mpaaRating">MPAA Rating:</label>
+    <input type="text" id="mpaaRating" name="mpaaRating" required><br>
+
+    <label for="director">Director:</label>
+    <input type="text" id="director" name="director" required><br>
+
+    <label for="studio">Studio:</label>
+    <input type="text" id="studio" name="studio" required><br>
+
+    <label for="userRating">User Rating:</label>
+    <input type="text" id="userRating" name="userRating" required><br>
+
+    <button type="submit">Add DVD</button>
+</form>
+
+<label for="filter-title">Filter DVDs by Title:</label>
+<input type="text" id="filter-title" name="filter-title">
+
+<h2>DVDs</h2>
+<ul id="dvds-list"></ul>
+
+<button type="button" id="delete-dvd" disabled>Delete Selected DVD</button>
+
+<script src="Script.js"></script>
+</body>
+</html>

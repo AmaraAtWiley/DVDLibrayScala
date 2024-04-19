@@ -3,10 +3,12 @@ package com.example
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
 import scala.util.Failure
 import scala.util.Success
+import scala.concurrent.ExecutionContextExecutor
 
 //#main-class
 object QuickstartApp {
@@ -26,14 +28,32 @@ object QuickstartApp {
     }
   }
   //#start-http-server
+
+  //#serve-static-html
+  private def staticRoutes(implicit system: ActorSystem[_]): Route = {
+    // Serve the HTML file located in the resources directory
+    get {
+      pathEndOrSingleSlash {
+        getFromResource("static/index.html")
+      } ~
+        // Serve other static files if needed (e.g., CSS, JavaScript)
+        pathPrefix("static") {
+          getFromResourceDirectory("static")
+        }
+    }
+  }
+  //#serve-static-html
+
   def main(args: Array[String]): Unit = {
     //#server-bootstrapping
     val rootBehavior = Behaviors.setup[Nothing] { context =>
       val dvdRegistryActor = context.spawn(DVDRegistry(), "DVDRegistryActor")
       context.watch(dvdRegistryActor)
 
-      val routes = new DVDRoutes(dvdRegistryActor)(context.system)
-      startHttpServer(routes.dvdRoutes)(context.system)
+      val dvdRoutes = new DVDRoutes(dvdRegistryActor)(context.system)
+      val combinedRoutes = dvdRoutes.dvdRoutes ~ staticRoutes(context.system)
+
+      startHttpServer(combinedRoutes)(context.system)
 
       Behaviors.empty
     }

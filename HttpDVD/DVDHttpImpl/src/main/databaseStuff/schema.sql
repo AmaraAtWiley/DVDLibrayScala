@@ -1,4 +1,4 @@
--- DROP DATABASE IF EXISTS dvdLibrary;
+DROP DATABASE IF EXISTS dvdLibrary;
 
 CREATE DATABASE dvdLibrary;
 

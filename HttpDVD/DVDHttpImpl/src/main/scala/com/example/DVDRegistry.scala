@@ -23,15 +23,15 @@ object DVDRegistry {
   val url = "jdbc:mysql://localhost:3306/dvdLibrary?serverTimezone=America/Chicago&useSSL=false"
   val driver = "com.mysql.cj.jdbc.Driver"
   val username = "root"
-  val password = "Deepak15@singh"
+  val password = "root"
 
 
   // actor protocol
   sealed trait Command
   final case class GetDVDs(replyTo: ActorRef[DVDs]) extends Command
   final case class CreateDVD(dvd: DVD, replyTo: ActorRef[ActionPerformed]) extends Command
-  //  final case class GetDVD(title: String, replyTo: ActorRef[GetDVDResponse]) extends Command
-  //  final case class DeleteDVD(title: String, replyTo: ActorRef[ActionPerformed]) extends Command
+  final case class DeleteDVD(title : String, replyTo: ActorRef[ActionPerformed]) extends Command
+  final case class GetDVD(title: String, replyTo: ActorRef[GetDVDResponse]) extends Command
 
   final case class GetDVDResponse(maybeDVD: Option[DVD])
   final case class ActionPerformed(description: String)
@@ -75,12 +75,40 @@ object DVDRegistry {
         statement.executeUpdate()
         replyTo ! ActionPerformed(s"DVD ${dvd.title} created.")
         Behaviors.same
-      //      case GetDVD(title, replyTo) =>
-      //        replyTo ! GetDVDResponse(dvds.find(_.title == title))
-      //        Behaviors.same
-      //      case DeleteDVD(title, replyTo) =>
-      //        replyTo ! ActionPerformed(s"DVD $title deleted.")
-      //        registry(dvds.filterNot(_.title == title))
+
+      case GetDVD(title, replyTo) =>
+        val statement = connection.prepareStatement(
+          "SELECT * FROM dvds WHERE title = ?"
+        )
+        statement.setString(1, title)
+        val dvdResult = statement.executeQuery()
+        if (dvdResult.next()){
+        val dvd = DVD(
+          dvdResult.getString("title"),
+          dvdResult.getInt("releaseYear"),
+          dvdResult.getString("mpaaRating"),
+          dvdResult.getString("director"),
+          dvdResult.getString("studio"),
+          dvdResult.getString("userRating")
+        )
+        replyTo ! GetDVDResponse(Some(dvd))
+        } else{
+          replyTo ! GetDVDResponse(None)
+        }
+        Behaviors.same
+
+      case DeleteDVD(title, replyTo) =>
+        val statement = connection.prepareStatement(
+          "DELETE FROM dvds WHERE title = ?"
+        )
+        statement.setString(1, title)
+        val rowsAffected = statement.executeUpdate()
+        if (rowsAffected == 1) {
+          replyTo ! ActionPerformed(s"DVD $title deleted.")
+        } else {
+          replyTo ! ActionPerformed(s"DVD $title was not found.")
+        }
+        Behaviors.same
     }
   }
 }
